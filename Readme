@@ -1,0 +1,64 @@
+Tutorial of Pytorch
+    (1) dataset
+        a. __getitem__:
+            Get ONE data(including input and label) from dataset:
+            ```python
+            def __len__(self):
+                return len(self.train_data)
+            ```
+        b. __len__
+            Return length of dataset, as the following example:
+            ```python
+            def __getitem__(self, index):
+                input_data = self.train_data.data[index]
+                label = self.train_data.targets[index]
+
+                sample = {'input': input_data, 'label': label}
+
+                return sample
+            ```
+    (2) model architecture
+        a. Define layers of model
+        b. Forward
+    (3) training/testing code
+        a. Model:
+            (a) Declare model
+            (b) objective function
+            (c) optimizer
+            (c) Move model to device(cpu or gpu)
+                ```python
+                device = torch.device("cuda" if use_cuda else "cpu")
+                net.to(device)
+                ```
+        b. Dataset
+            (a) declare dataset
+            (b) package dataset with DataLoader:
+                ```python
+                dataloader = torch.utils.data.DataLoader(dataset=dataset.train_data, batch_size=64, shuffle=True)
+                ```
+            (c) Move data to device
+        c. Learning
+            (a) Set gradient to zero at first of each batch
+                ```python
+                optimizer.zero_grad()
+                ```
+            (b) Predict and computer loss
+                ```python
+                output = net(x)
+                pred = output.max(1, keepdim=True)[1]
+                loss = torch.nn.CrossEntropyLoss()(output, y)
+                ```
+            (c) back propagation
+                ```python
+                loss.backward()
+                optimizer.step()
+                ```
+            (d) Save/load model
+                ```python
+                # save
+                torch.save(net, model_path)
+
+                # load
+                net = torch.load(model_path)
+                ```
+
